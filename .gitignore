@@ -1,0 +1,19 @@
+node_modules
+    # NPM dosyaları
+node_modules/
+package-lock.json
+
+# VS Code dosyaları
+.vscode/
+
+# Yapı dosyaları
+dist/
+build/
+
+# Geçici dosyalar
+*.log
+*.tmp
+
+# Resimler
+*.png
+*.jpg
