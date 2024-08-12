@@ -15,71 +15,81 @@ function PostFooter({ post, isProfilePage, creatorProfile, handleLikePost, isLik
     const [comment, setComment] = useState("");
     const { isCommenting, handlePostComment } = usePostComment();
     const commentRef = useRef(null);
-    const { isOpen, onOpen, onClose } = useDisclosure();
-  
-    const handleSubmitComment = async () => {
-      await handlePostComment(post.id, comment);
-      setComment("");
-    };
-  
-    return (
-      <Box mb={10} marginTop={"auto"}>
-        <Flex alignItems={"center"} gap={4} w={"full"} pt={"0"} mb={"2"} mt={"4"}>
-          <Box onClick={handleLikePost} cursor={"pointer"} fontSize={17}>
-            {!isLiked ? (<NotificationsLogo />) : (<UnlikeLogo />)}
-          </Box>
-          <Box cursor={"pointer"} fontSize={17} onClick={() => commentRef.current.focus()}>      
-            <CommentLogo />
-          </Box>  
-        </Flex>
-        <Text>{likes} Likes</Text>
-  
-        {isProfilePage && (
-          <Text fontSize={"12"} color={"gray"}>
-            posted {timeAgo(post.createdAt)} 
-          </Text>
-        )}
-  
-        {!isProfilePage && (
-          <>
-            <Text fontSize={"sm"} fontWeight={600}>
-              {creatorProfile?.username} {" "}
-              <Text as="span" fontWeight={400}>
-                {post.caption} 
-              </Text>
-            </Text>
-            <Text fontSize={"sm"} color={"gray"} cursor={"pointer"} onClick={onOpen}>
-              View All {post.comments.length} Comments
-            </Text>      
-          </>
-        )}
-        {isOpen && <CommentsModal post={post} isOpen={isOpen} onClose={onClose} />}
-  
-        {authUser && (
-          <Flex alignItems={"center"} gap={2} justifyContent={"space-between"} w={"full"}>
-            <Input
-              placeholder={"Add a comment..."}
-              fontSize={14}
-              onChange={(e) => setComment(e.target.value)}
-              value={comment}
-              ref={commentRef}
-            />
-            <Button
-              fontSize={15}
-              color={"blue.500"}
-              cursor={"pointer"}
-              _hover={{ color: "white" }}
-              bg={"transparent"}
-              onClick={handleSubmitComment}
-              isLoading={isCommenting}
-            >
-              Post
-            </Button>
-          </Flex>
-        )}
-      </Box>
-    );
-  }
-  
-  export default PostFooter;
-  
+    const {handleLikePost,isLiked,likes}= useLikePost(post)
+    const {isOpen,onOpen,onClose}=useDisclosure()
+
+    const handleSubmitComment= async()=>{
+        //prevent default kullanmıyoruz form değil.
+        await handlePostComment(post.id,comment)
+        setComment("")
+    }
+
+  return (
+    <Box mb={10} marginTop={"auto"}>
+    <Flex alignItems={"center"} gap={4} w={"full"}pt={"0"}mb={"2"} mt={"4"}>
+        <Box onClick={handleLikePost} cursor={"pointer"} fontSize={17}>
+            {!isLiked ?(<NotificationsLogo/>):(<UnlikeLogo/>)}
+        </Box>
+        <Box cursor={"pointer"} fontSize={17} onClick={()=>commentRef.current.focus()}>      
+            <CommentLogo/>
+        </Box>  
+    </Flex>
+    <Text> {likes} Likes</Text>
+
+    {isProfilePage&&(
+        <Text fontSize={"12"} color={"gray"}>
+            posted {timeAgo(post.createdAt)} </Text>
+    )}
+
+
+    {!isProfilePage&&(
+        <>
+        
+    <Text fontSize={"sm"} fontWeight={600}>
+    {creatorProfile?.username} {" "} {/* kullanıcı adı*/}
+        <Text as="span" fontWeight={400}>{/* Açıklama*/} {post.caption} </Text>
+    </Text>
+    <Text fontSize={"sm"} color={"gray"} cursor={"pointer"} onClick={onOpen}>
+        View All {post.comments.length} Comments</Text>       {/* Yorumları Göster*/}
+      
+        </>
+    )}
+    {isOpen? <CommentsModal post={post} isOpen={isOpen} onClose={onClose}/>:null}
+
+
+            {authUser && (
+                
+                <Flex alignItems={"center"} gap={2} justifyContent={"space-between"} w={"full"}>
+						<Input
+							placeholder={"Add a comment..."}
+							fontSize={14}
+							onChange={(e) => setComment(e.target.value)}
+							value={comment}
+                           ref= {commentRef}
+						/>
+				
+							<Button
+								fontSize={15}
+								color={"blue.500"}
+								cursor={"pointer"}
+								_hover={{ color: "white" }}
+								bg={"transparent"}
+								onClick={handleSubmitComment}
+								isLoading={isCommenting}
+							>
+								Post
+							</Button>
+					
+				</Flex>
+                
+                
+                )}
+
+
+				
+			
+		</Box>
+	);
+};
+
+export default PostFooter
