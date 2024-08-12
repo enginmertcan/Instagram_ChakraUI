@@ -12,7 +12,7 @@ const useFollowUser = (userId) => {
     const setAuthUser = useAuthStore((state) => state.setUser); 
     const { userProfile, setUserProfile } = userProfileStore();
     const showToast = useShowToast();
-
+ 
     const handleFollowUser = async () => {
     
         setIsUpdating(true);
@@ -69,6 +69,8 @@ const useFollowUser = (userId) => {
                 setIsFollowing(true);
             }
         } catch (error) {
+			console.error("Error updating documents:", error);
+
             showToast("Error", error.message, "error");
         } finally {
             setIsUpdating(false);
